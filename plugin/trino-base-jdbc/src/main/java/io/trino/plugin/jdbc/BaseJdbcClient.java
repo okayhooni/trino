@@ -883,6 +883,7 @@ public abstract class BaseJdbcClient
         ConnectorIdentity identity = session.getIdentity();
         try (Connection connection = connectionFactory.openConnection(session)) {
             schemaName = identifierMapping.toRemoteSchemaName(identity, connection, schemaName);
+            verifySchemaName(connection.getMetaData(), schemaName);
             execute(connection, createSchemaSql(schemaName));
         }
         catch (SQLException e) {
@@ -920,6 +921,7 @@ public abstract class BaseJdbcClient
         try (Connection connection = connectionFactory.openConnection(session)) {
             String remoteSchemaName = identifierMapping.toRemoteSchemaName(identity, connection, schemaName);
             String newRemoteSchemaName = identifierMapping.toRemoteSchemaName(identity, connection, newSchemaName);
+            verifySchemaName(connection.getMetaData(), newRemoteSchemaName);
             execute(connection, renameSchemaSql(remoteSchemaName, newRemoteSchemaName));
         }
         catch (SQLException e) {
@@ -1076,6 +1078,12 @@ public abstract class BaseJdbcClient
     {
         String sql = "TRUNCATE TABLE " + quoted(handle.asPlainTable().getRemoteTableName());
         execute(session, sql);
+    }
+
+    protected void verifySchemaName(DatabaseMetaData databaseMetadata, String schemaName)
+            throws SQLException
+    {
+        // expect remote databases throw an exception for unsupported schema names
     }
 
     protected void verifyTableName(DatabaseMetaData databaseMetadata, String tableName)

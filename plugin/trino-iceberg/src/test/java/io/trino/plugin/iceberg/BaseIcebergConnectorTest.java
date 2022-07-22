@@ -4364,6 +4364,27 @@ public abstract class BaseIcebergConnectorTest
     }
 
     @Override
+    public void testRenameSchemaToLongName()
+    {
+        // TODO: (https://github.com/trinodb/trino/issues/13306) Enable after fixing the rename schema issue in file metastore
+        assertThatThrownBy(super::testRenameSchemaToLongName)
+                .hasMessageContaining("could not find the following element");
+    }
+
+    @Override
+    protected OptionalInt maxSchemaNameLength()
+    {
+        // This value depends on metastore type
+        return OptionalInt.of(255 - "..".length() - ".trinoSchema.crc".length());
+    }
+
+    @Override
+    protected void verifySchemaNameLengthFailurePermissible(Throwable e)
+    {
+        assertThat(e).hasMessage("Could not write database schema");
+    }
+
+    @Override
     protected OptionalInt maxTableNameLength()
     {
         // This value depends on metastore type
