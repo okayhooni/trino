@@ -309,9 +309,14 @@ public class FunctionResolver
 
     private static boolean canExecuteFunction(Session session, AccessControl accessControl, CatalogSchemaFunctionName functionName)
     {
-        if (isInlineFunction(functionName) || isBuiltinFunctionName(functionName)) {
+        if (isBuiltinFunctionName(functionName)) {
             return true;
         }
+
+        if (isInlineFunction(functionName)) {
+            return true;
+        }
+
         return accessControl.canExecuteFunction(
                 SecurityContext.of(session),
                 new QualifiedObjectName(functionName.getCatalogName(), functionName.getSchemaName(), functionName.getFunctionName()));

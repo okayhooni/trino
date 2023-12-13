@@ -109,6 +109,8 @@ public class FeaturesConfig
 
     private boolean faultTolerantExecutionExchangeEncryptionEnabled = true;
 
+    private boolean accessControlOnInlineFunctionEnabled = false;
+
     public enum DataIntegrityVerification
     {
         NONE,
@@ -501,5 +503,17 @@ public class FeaturesConfig
     public void applyFaultTolerantExecutionDefaults()
     {
         exchangeCompressionEnabled = true;
+    }
+
+    public boolean accessControlOnInlineFunctionEnabled()
+    {
+        return accessControlOnInlineFunctionEnabled;
+    }
+
+    @Config("access-control-on-inline-function-enabled")
+    public FeaturesConfig setAccessControlOnInlineFunctionEnabled(boolean accessControlOnInlineFunctionEnabled)
+    {
+        this.accessControlOnInlineFunctionEnabled = accessControlOnInlineFunctionEnabled;
+        return this;
     }
 }
