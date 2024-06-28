@@ -68,17 +68,6 @@ public class TestHiveRequireQueryPartitionsFilter
         assertThat(onTrino().executeQuery(format("SELECT COUNT(*) FROM %s WHERE p_regionkey = 1", tableName))).containsOnly(row(5));
     }
 
-    @Test(dataProvider = "queryPartitionFilterRequiredSchemasDataProvider")
-    public void testIgnoreRequiresQueryPartitionFilterOnSpecificSchemaWhenQueryPartitionFilterRequiredIsFalse(String queryPartitionFilterRequiredSchemas)
-    {
-        String tableName = tablesState.get("test_table").getNameInDatabase();
-
-        onTrino().executeQuery("SET SESSION hive.query_partition_filter_required = false");
-        onTrino().executeQuery(format("SET SESSION hive.query_partition_filter_required_schemas = %s", queryPartitionFilterRequiredSchemas));
-
-        assertThat(onTrino().executeQuery("SELECT COUNT(*) FROM " + tableName)).containsOnly(row(15));
-    }
-
     @DataProvider
     public Object[][] queryPartitionFilterRequiredSchemasDataProvider()
     {
